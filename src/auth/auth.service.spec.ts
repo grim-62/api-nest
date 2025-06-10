@@ -3,7 +3,6 @@ import { AuthService } from './auth.service';
 import { getModelToken } from '@nestjs/mongoose';
 import { JwtModule } from '@nestjs/jwt';
 import { User } from '../user/entities/user.entity';
-import { Model } from 'mongoose';
 
 // Mock functions
 const userModelMock = {

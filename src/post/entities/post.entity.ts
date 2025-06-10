@@ -1,7 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Types } from 'mongoose';
-import { User } from 'src/user/entities/user.entity';
-
+import { User } from '../../user/entities/user.entity';
 
 export type PostDocument = HydratedDocument<Post>;
 
@@ -16,13 +15,13 @@ export class Post {
   @Prop({ type: Types.ObjectId, ref: User.name, required: true })
   userId: Types.ObjectId;
 
-  @Prop({required:true})
+  @Prop({ required: true })
   imageUrl: string;
 
   @Prop({ default: 0 })
   likes: number;
 
-  @Prop({ type: [String], default: [] ,required:false})
+  @Prop({ type: [String], default: [], required: false })
   tags: string[];
 }
 
