@@ -1,15 +1,18 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req } from '@nestjs/common';
 import { PostService } from './post.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
+import { AuthGuard } from 'src/guard/auth.guard';
+import { log } from 'console';
 
 @Controller('post')
 export class PostController {
   constructor(private readonly postService: PostService) {}
 
   @Post()
-  create(@Body() createPostDto: CreatePostDto) {
-    return this.postService.create(createPostDto);
+  @UseGuards(AuthGuard)
+  create(@Req() req , @Body() createPostDto: CreatePostDto) {
+    return this.postService.create(req, createPostDto);
   }
 
   @Get()
@@ -23,12 +26,14 @@ export class PostController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
-    return this.postService.update(+id, updatePostDto);
+  @UseGuards(AuthGuard)
+  update(@Param('id') id: string,@Req() req, @Body() updateDto: UpdatePostDto) {
+    return this.postService.update(+id, req.userId, updateDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.postService.remove(+id);
+  @UseGuards(AuthGuard)
+  remove(@Param('id') id: string,@Req() req) {
+    return this.postService.remove(+id, req.userId  );
   }
 }

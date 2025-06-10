@@ -10,22 +10,19 @@ export class Post {
   @Prop({ required: true })
   title: string;
 
-  @Prop({ required: true })
+  @Prop({ required: false })
   content: string;
 
   @Prop({ type: Types.ObjectId, ref: User.name, required: true })
-  author: Types.ObjectId;
+  userId: Types.ObjectId;
 
-  @Prop()
+  @Prop({required:true})
   imageUrl: string;
-
-  @Prop({ default: true })
-  isPublished: boolean;
 
   @Prop({ default: 0 })
   likes: number;
 
-  @Prop({ type: [String], default: [] })
+  @Prop({ type: [String], default: [] ,required:false})
   tags: string[];
 }
 

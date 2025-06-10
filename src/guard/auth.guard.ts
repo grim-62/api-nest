@@ -10,7 +10,6 @@ import { Request } from 'express';
 import { Observable } from 'rxjs';
 
 @Injectable()
-
 export class AuthGuard implements CanActivate {
   constructor(private readonly jwtService: JwtService) {}
 
@@ -26,8 +25,9 @@ export class AuthGuard implements CanActivate {
 
     try {
       const payload = this.jwtService.verify(token);
-
-      request.userId = payload.userId; 
+      console.log('Payload:============>', payload); // Debugging line to log the payload
+      
+      request.userId = payload.id; 
       return true; 
     } catch (error) {
       Logger.error(error.message)

@@ -1,26 +1,35 @@
 import { Injectable } from '@nestjs/common';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
+import { InjectModel } from '@nestjs/mongoose';
+import { Post, PostDocument } from './entities/post.entity';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class PostService {
-  create(createPostDto: CreatePostDto) {
-    return 'This action adds a new post';
+  constructor(@InjectModel(Post.name) private readonly postModel : Model<PostDocument>){}
+
+  async create(req, postdto) {
+    const post = await new this.postModel({
+      ...postdto,
+      userId: req.userId,
+    });
+    return post.save();
   }
 
-  findAll() {
-    return `This action returns all post`;
+  async findAll() {
+    return this.postModel.find().populate('userId').exec();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} post`;
+  async findOne(id: number) {
+    return this.postModel.findById(id).populate('userId', 'username').exec();
   }
 
-  update(id: number, updatePostDto: UpdatePostDto) {
-    return `This action updates a #${id} post`;
+  async  update(id: number, userId: string, updatePostDto: UpdatePostDto) {
+    return this.postModel.findByIdAndUpdate(id, updatePostDto, { new: true }).populate('userId', 'username').exec();
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} post`;
+  remove(id: number, userId: string) {
+    return this.postModel.findByIdAndDelete(id).exec();
   }
 }
